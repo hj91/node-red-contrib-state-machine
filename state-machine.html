@@ -1,0 +1,102 @@
+<!--
+
+state-machine.html - Copyright 2023 Harshad Joshi and Bufferstack.IO Analytics Technology LLP, Pune.
+
+Licensed under the GNU General Public License, Version 3.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    https://www.gnu.org/licenses/gpl-3.0.html
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+-->
+
+<script type="text/javascript">
+    RED.nodes.registerType('state-machine', {
+        category: 'Bufferstack.IO State Machine',
+        color: '#a6bbcf',
+        defaults: {
+            name: {value:"Bufferstack.IO State Machine"},
+            states: {value: "", required: true}  // Changed from array to string
+        },
+        inputs: 1,
+        outputs: 1,
+        icon: "white-globe.png",
+        label: function() {
+            return this.name || "state-machine";
+        },
+        oneditprepare: function() {
+            var node = this;
+
+            // Split the states string into an array if it's not empty
+            var states = $("#node-input-states").val() ? $("#node-input-states").val().split(",") : [];
+
+            $("#node-input-addState").click(function() {
+                var newState = $("#node-input-newState").val();
+                if (newState) {
+                    states.push(newState);
+                    updateStates();
+                    $("#node-input-newState").val('');
+                }
+            });
+
+            $("#node-input-removeState").click(function() {
+                var removeState = $("#node-input-removeStateName").val();
+                if (removeState) {
+                    var index = states.indexOf(removeState);
+                    if (index !== -1) {
+                        states.splice(index, 1);
+                        updateStates();
+                    }
+                    $("#node-input-removeStateName").val('');
+                }
+            });
+
+            function updateStates() {
+                var list = $("#node-input-statesList").empty();
+                states.forEach(function(state) {
+                    list.append($('<li>').text(state));
+                });
+                // Join the states array back into a string
+                $("#node-input-states").val(states.join(","));
+            }
+
+            updateStates();
+        }
+    });
+</script>
+
+<script type="text/x-red" data-template-name="state-machine">
+    <div class="form-row">
+        <label for="node-input-newState"><strong>Add a new state</strong></label>
+        <input type="text" id="node-input-newState" placeholder="Enter new state here">
+        <button id="node-input-addState">Add state</button>
+    </div>
+    <div class="form-row">
+        <label for="node-input-removeStateName"><strong>Remove a state</strong></label>
+        <input type="text" id="node-input-removeStateName" placeholder="Enter state to remove">
+        <button id="node-input-removeState">Remove state</button>
+    </div>
+    <div class="form-row">
+        <label for="node-input-statesList"><strong>Current list of states:</strong></label>
+        <ul id="node-input-statesList"></ul>
+    </div>
+    <input type="hidden" id="node-input-states">
+</script>
+
+<script type="text/x-red" data-help-name="state-machine">
+    <p>This node represents a state machine.</p>
+    <p>You can add or remove states. The states will be transitioned based on the incoming message's topic.</p>
+    <p>Topics and their behaviors:</p>
+    <ul>
+        <li><b>"start"</b>: Changes the state to the first state in the list</li>
+        <li><b>"next"</b>: Changes the state to the next state in the list</li>
+        <li><b>"previous"</b>: Changes the state to the previous state in the list</li>
+    </ul>
+</script>
+
