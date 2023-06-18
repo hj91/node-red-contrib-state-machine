@@ -1,0 +1,31 @@
+{
+    "name": "node-red-contrib-state-machine",
+    "version": "1.0.0",
+    "description": "A Node-RED custom node for managing states.",
+    "main": "state-machine.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/hj91/node-red-contrib-state-machine.git"
+    },
+    "keywords": [
+        "Node-RED",
+        "state",
+        "machine",
+        "workflow"
+    ],
+    "author": "Harshad Joshi",
+    "license": "GPL-3.0",
+    "bugs": {
+        "url": "https://github.com/hj91/node-red-contrib-state-machine/issues"
+    },
+    "homepage": "https://github.com/hj91/node-red-contrib-state-machine#readme",
+    "node-red": {
+        "nodes": {
+            "state-machine": "./state-machine.js"
+        }
+    }
+}
+
